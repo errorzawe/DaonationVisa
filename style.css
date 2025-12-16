@@ -1,116 +1,192 @@
+/* Reset & base */
+* { box-sizing: border-box; }
 body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
     font-family: DM Sans, sans-serif;
     color: #555555;
+    -webkit-font-smoothing: antialiased;
 }
 
+/* Header - mobile-first */
 header {
-    /* background-color: black; */
-    padding: 1%;
-    text-align: center;
     width: 100%;
-    height: 15vh;
+    min-height: 64px;
+    padding: 12px 16px;
     display: flex;
-    justify-content: center;
-    flex-direction: row;
-    box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.08);
+    position: relative;
 }
-
 
 .logoSection {
-    width: 40%;
-    height: 100%;
     display: flex;
-    justify-content: start;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .logoImg {
-    width: 45%;
-    height: 100%;
+    display: block;
+    height: 40px;
+    width: auto;
     cursor: pointer;
 }
 
-.headerMenu {
-    width: 60%;
-    height: 100%;
-    display: flex;
-    justify-content: end;
-    flex-direction: column;
-    gap: 10px;
+/* Toggle button (hidden on desktop) */
+.menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    color: #333;
+    cursor: pointer;
 }
+
+/* Header menu (collapsed by default on small screens) */
+.headerMenu {
+    position: absolute;
+    top: 100%;
+    left: 8px;
+    right: 8px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 12px;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    z-index: 60;
+}
+
+.headerMenu.open { display: flex; }
 
 .contactMenu_search {
     display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-evenly;
+    flex-direction: column;
+    gap: 8px;
     font-size: 13px;
 }
 
-.search {
-    display: flex;
-    flex-direction: row;
-}
+.search { display: flex; }
 
 .form-inline {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    width: 100%;
+    gap: 0;
     align-items: center;
 }
 
 .form-inline input {
-    border-radius: 100px 0px 0px 100px;
-    border: none;
-    width: 80%;
-    color: white;
+    flex: 1 1 auto;
+    padding: 8px 12px;
+    border-radius: 24px 0 0 24px;
     border: 1px solid #ffcc00;
+    outline: none;
 }
 
-.form-inline input:focus {
-    box-shadow: none;
-}
-
-.form-inline input::placeholder {
-    opacity: 0.6;
-}
-
+.form-inline input::placeholder { opacity: 0.6; }
 .form-inline button {
-    border-radius: 0px 100px 100px 0px;
+    padding: 8px 12px;
+    border-radius: 0 24px 24px 0;
     border: none;
-    background-color: #ffcc00;
-    width: 30%;
-    padding: 2px 2px 2px 2px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+    background: #ffcc00;
+    cursor: pointer;
 }
 
 .whatsApp {
     display: flex;
-    flex-direction: row;
+    gap: 8px;
     align-items: center;
-    cursor: pointer;
-    justify-content: center;
-    text-align: center;
+    justify-content: flex-start;
 }
 
-.icon-margin {
-    margin-right: 5px;
-}
+.icon-margin { margin-right: 6px; }
 
 .menuItem {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.child-menuItem {
-    cursor: pointer;
+.child-menuItem { cursor: pointer; }
+
+/* Hide contact text when viewport reduced by 50px from initial width */
+.reduced-50 .contact-text {
+    display: none !important;
+}
+
+/* Desktop: keep original layout and sizes exactly as before */
+@media (min-width: 993px) {
+    header {
+        padding: 1%;
+        text-align: center;
+        height: 15vh;
+        align-items: stretch;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .menu-toggle { display: none; }
+
+    .logoSection { width: 40%; height: 100%; }
+
+    .logoImg { height: 100%; max-height: 100%; width: auto; }
+
+    .headerMenu {
+        position: static;
+        display: flex !important;
+        width: 60%;
+        height: 100%;
+        background: transparent;
+        padding: 0;
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: none;
+    }
+
+    .contactMenu_search {
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        width: 100%;
+    }
+
+    .form-inline { width: auto; }
+
+    .form-inline input {
+        width: 240px;
+        color: #333;
+        border-radius: 100px 0 0 100px;
+    }
+
+    .form-inline button {
+        width: auto;
+        border-radius: 0 100px 100px 0;
+    }
+
+    .menuItem {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* Small tweak for very small phones */
+@media (max-width: 360px) {
+    .logoImg { height: 36px; }
+    .form-inline input { padding: 6px 8px; }
+}
+
+
+@media (min-width: 1100px) {
+    contact-text {
+        display: none !important;
+    }
 }
