@@ -4,46 +4,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	if (!menu) return;
 
-	// Existing menu toggle (if present)
+	// Menu toggle (single, guarded handler)
 	if (toggle) {
+		toggle.setAttribute('aria-expanded', 'false');
 		toggle.addEventListener('click', function (e) {
 			e.stopPropagation();
-			menu.classList.toggle('open');
+			const isOpen = menu.classList.toggle('open');
+			toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+			menu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
 		});
 	}
-
-	toggle.addEventListener('click', function (e) {
-		e.stopPropagation();
-		menu.classList.toggle('open');
-	});
 
 	// Close menu when clicking outside
 	document.addEventListener('click', function (e) {
 		if (toggle && !menu.contains(e.target) && !toggle.contains(e.target)) {
 			menu.classList.remove('open');
+			toggle.setAttribute('aria-expanded', 'false');
+			menu.setAttribute('aria-hidden', 'true');
 		}
 	});
 
-	// === New: hide contact text when viewport is reduced by 50px from initial width ===
-	const initialWidth = window.innerWidth;
-	let reducedClass = 'reduced-50';
+	// Removed premature-hide behavior: contact texts/icons remain visible until CSS breakpoints
 
-	function checkReduced() {
-		const current = window.innerWidth;
-		if (current <= initialWidth - 50) {
-			document.body.classList.add(reducedClass);
-		} else {
-			document.body.classList.remove(reducedClass);
-		}
+	// Search button behavior: focus/expand input instead of submitting when collapsed
+	const searchForm = document.querySelector('.form-inline');
+	const searchInput = searchForm ? searchForm.querySelector('input[type="search"]') : null;
+	const searchButton = searchForm ? searchForm.querySelector('button[type="submit"]') : null;
+
+	if (searchButton && searchInput) {
+		searchButton.addEventListener('click', function (ev) {
+			// if input is not visible/expanded yet, prevent submit and focus to expand
+			if (searchInput.offsetWidth < 40) {
+				ev.preventDefault();
+				searchInput.classList.add('expanded');
+				searchInput.focus();
+				return;
+			}
+			// otherwise allow normal submit
+		});
+
+		// collapse input when it loses focus and is empty
+		searchInput.addEventListener('blur', function () {
+			setTimeout(function () {
+				if (!searchInput.value) searchInput.classList.remove('expanded');
+			}, 150);
+		});
 	}
-
-	// Debounced resize handler
-	let timeout;
-	window.addEventListener('resize', function () {
-		clearTimeout(timeout);
-		timeout = setTimeout(checkReduced, 120);
-	});
-
-	// Run once on load
-	checkReduced();
 });

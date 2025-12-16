@@ -46,6 +46,9 @@ header {
     cursor: pointer;
 }
 
+/* ensure toggle is clickable above the menu */
+.menu-toggle { z-index: 70; }
+
 /* Header menu (collapsed by default on small screens) */
 .headerMenu {
     position: absolute;
@@ -66,9 +69,11 @@ header {
 
 .contactMenu_search {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    flex-direction: row;
+    gap: 12px;
     font-size: 13px;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .search { display: flex; }
@@ -88,6 +93,47 @@ header {
     outline: none;
 }
 
+/* Compact expandable search: keep icons inline and let input expand on focus */
+.search { position: relative; width: auto; }
+.form-inline { display: inline-flex; align-items: center; }
+.form-inline input {
+    position: absolute;
+    right: 48px; /* leave room for the circular search button */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    padding: 0;
+    border-radius: 20px;
+    opacity: 0;
+    transition: width .22s ease, padding .22s ease, opacity .18s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    background: #fff;
+    border: 1px solid #ffcc00;
+    z-index: 65;
+}
+.form-inline button {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.form-inline input:focus,
+.form-inline input.expanded,
+.headerMenu.open .form-inline input {
+    width: 160px;
+    padding: 8px 12px;
+    opacity: 1;
+}
+
+/* keep icons centered and compact */
+.headerMenu .whatsApp,
+.headerMenu .phoneNo,
+.headerMenu .email { width: 40px; justify-content: center; }
+.headerMenu .icon-margin { margin-right: 0; }
+
 .form-inline input::placeholder { opacity: 0.6; }
 .form-inline button {
     padding: 8px 12px;
@@ -97,11 +143,27 @@ header {
     cursor: pointer;
 }
 
+/* Mobile: show only icons inside the header menu and make them inline */
+.headerMenu .contactMenu_search { flex-direction: row; justify-content: space-between; gap: 12px; }
+.headerMenu .form-inline { width: auto; }
+.headerMenu .form-inline button {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.headerMenu .whatsApp { justify-content: center; }
+.headerMenu .icon-margin { margin-right: 0; }
+
 .whatsApp {
     display: flex;
     gap: 8px;
     align-items: center;
     justify-content: flex-start;
+    cursor: pointer;
 }
 
 .icon-margin { margin-right: 6px; }
@@ -112,15 +174,15 @@ header {
     gap: 8px;
 }
 
-.child-menuItem { cursor: pointer; }
-
-/* Hide contact text when viewport reduced by 50px from initial width */
-.reduced-50 .contact-text {
-    display: none !important;
+.child-menuItem { 
+    cursor: pointer; 
+    font-size: 13px;
 }
 
+/* note: removed premature-hide rules so contact icons and search remain visible until breakpoints */
+
 /* Desktop: keep original layout and sizes exactly as before */
-@media (min-width: 993px) {
+@media (min-width: 810px) {
     header {
         padding: 1%;
         text-align: center;
@@ -173,7 +235,7 @@ header {
         flex-direction: row;
         justify-content: space-around;
         align-items: center;
-        width: 100%;
+        width: 80%;
         height: 100%;
     }
 }
@@ -186,7 +248,7 @@ header {
 
 
 @media (min-width: 1100px) {
-    contact-text {
+    .contact-text {
         display: none !important;
     }
 }
